@@ -1,0 +1,13 @@
+.*
+*.log
+*.out
+/tmp/
+!.github/
+!.husky/
+!.editorconfig
+!.gitignore
+!.golangci.yml
+!.goreleaser.yml
+!.husky.yaml
+go.work
+go.work.sum
