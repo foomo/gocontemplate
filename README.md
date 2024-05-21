@@ -14,12 +14,12 @@ Wrapper library around `golang.org/x/tools/go/packages` to filter only defined t
 package main
 
 import (
-  "github.com/foomo/gocontemplate"
+  "github.com/foomo/gocontemplate/pkg/contemplate"
 )
 
 func main() {
-  goctpl, err := gocontemplate.Load(&gocontemplate.Config{
-    Packages: []*gocontemplate.ConfigPackage{
+  ctpl, err := contemplate.Load(&contemplate.Config{
+    Packages: []*contemplate.PackageConfig{
       {
         Path:  "github.com/foomo/sesamy-go/event",
         Types: []string{"PageView"},
