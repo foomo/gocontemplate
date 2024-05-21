@@ -77,6 +77,10 @@ func (s *Package) ScopeTypes() map[string]types.Object {
 	return s.scopeTypes
 }
 
+func (s *Package) Raw() *packages.Package {
+	return s.pkg
+}
+
 // ------------------------------------------------------------------------------------------------
 // ~ Public methods
 // ------------------------------------------------------------------------------------------------
