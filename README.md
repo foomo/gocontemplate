@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/foomo/gocontemplate)](https://goreportcard.com/report/github.com/foomo/gocontemplate)
 [![GoDoc](https://godoc.org/github.com/foomo/gocontemplate?status.svg)](https://godoc.org/github.com/foomo/gocontemplate)
 
-> A code generation helper, that
+> A code generation helper.
 
 Wrapper library around `golang.org/x/tools/go/packages` to filter only defined types and their dependencies.
 

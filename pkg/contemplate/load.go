@@ -1,4 +1,4 @@
-package gocontemplate
+package contemplate
 
 import (
 	"golang.org/x/tools/go/packages"

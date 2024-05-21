@@ -1,7 +1,7 @@
-package gocontemplate
+package assume
 
-// TC type conversion helper
-func TC[T any](input any) T {
+// T type conversion helper
+func T[T any](input any) T {
 	var output T
 	if input == nil {
 		return output

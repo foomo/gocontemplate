@@ -1,10 +1,11 @@
-package gocontemplate
+package contemplate
 
 import (
 	"go/ast"
 	"go/types"
 	"slices"
 
+	"github.com/foomo/gocontemplate/pkg/assume"
 	"golang.org/x/exp/maps"
 	"golang.org/x/tools/go/packages"
 )
@@ -34,7 +35,7 @@ func (s *Contemplate) LookupExpr(name string) ast.Expr {
 func (s *Contemplate) LookupTypesByType(obj types.Object) []types.Object {
 	var ret []types.Object
 
-	expr := TC[*ast.Ident](s.LookupExpr(obj.Name()))
+	expr := assume.T[*ast.Ident](s.LookupExpr(obj.Name()))
 	if expr == nil {
 		return nil
 	}
@@ -43,17 +44,17 @@ func (s *Contemplate) LookupTypesByType(obj types.Object) []types.Object {
 		for _, object := range pkg.Types() {
 			switch objectType := object.(type) {
 			case *types.Const:
-				if objectTypeNamed := TC[*types.Named](objectType.Type()); objectTypeNamed != nil {
+				if objectTypeNamed := assume.T[*types.Named](objectType.Type()); objectTypeNamed != nil {
 					if objectTypeNamed.Obj() == obj {
 						ret = append(ret, objectType)
 					}
 				}
 			case *types.TypeName:
 				if objectExpr := pkg.LookupExpr(object.Name()); objectExpr != nil {
-					if objectExprIdent := TC[*ast.Ident](objectExpr); objectExprIdent != nil {
-						if objectExprDecl := TC[*ast.TypeSpec](objectExprIdent.Obj.Decl); objectExprDecl != nil {
+					if objectExprIdent := assume.T[*ast.Ident](objectExpr); objectExprIdent != nil {
+						if objectExprDecl := assume.T[*ast.TypeSpec](objectExprIdent.Obj.Decl); objectExprDecl != nil {
 							if objectExprType, ok := pkg.pkg.TypesInfo.Types[objectExprDecl.Type]; ok {
-								if objectExprTypeNamed := TC[*types.Named](objectExprType.Type); objectExprTypeNamed != nil {
+								if objectExprTypeNamed := assume.T[*types.Named](objectExprType.Type); objectExprTypeNamed != nil {
 									if objectExprTypeNamed.Obj() == obj {
 										ret = append(ret, objectType)
 									}
@@ -84,7 +85,7 @@ func (s *Contemplate) addPackages(pkgs ...*packages.Package) {
 	}
 }
 
-func (s *Contemplate) addPackagesConfigs(confs ...*ConfigPackage) {
+func (s *Contemplate) addPackagesConfigs(confs ...*PackageConfig) {
 	for _, conf := range confs {
 		s.Package(conf.Path).AddScopeTypes(conf.Types...)
 	}
@@ -101,10 +102,6 @@ func (s *Contemplate) LookupAstIdentDefsByDeclType(input types.TypeAndValue) []t
 			}
 		}
 	}
-	// for _, p := range s.pkgs {
-	// 	pkgs = append(pkgs, p)
-	// 	addImports(p)
-	// }
 
 	var ret []types.Object
 	for _, p := range pkgs {
@@ -114,18 +111,6 @@ func (s *Contemplate) LookupAstIdentDefsByDeclType(input types.TypeAndValue) []t
 				ret = append(ret, child)
 			}
 		}
-
-		// for defAstIdent, defTypeObject := range p.TypesInfo.Defs {
-		// 	if defAstIdent != nil && defAstIdent.Obj != nil && defTypeObject != nil {
-		// 		if declValueSpec := TC[*ast.ValueSpec](defAstIdent.Obj.Decl); declValueSpec != nil {
-		// 			if declValueSpecIdent := TC[*ast.Ident](declValueSpec.Type); declValueSpecIdent != nil {
-		// 				if declValueSpecIdent.Obj == input.Obj {
-		// 					ret[defAstIdent] = defTypeObject
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
 	}
 	return ret
 }
@@ -136,36 +121,4 @@ func (s *Contemplate) addPackageTypeNames(pkg *packages.Package, typeNames ...st
 	}
 	// add request scopes
 	s.Packages[pkg.PkgPath].AddScopeTypes(typeNames...)
-
-	// for k, v := range s.Packages[pkg.PkgPath].Imports {
-	// 	s.addPackageTypeNames(k, v...)
-	// }
-	// check underlying added scopes
-	// for _, name := range added {
-	// 	s.typesType(pkg, s.Packages[pkg.PkgPath].Scope[name].Underlying())
-	// }
 }
-
-// func (s *Loader) typesType(pkg *packages.Package, v types.Type) {
-// 	switch t := v.(type) {
-// 	case *types.Struct:
-// 		// iterate fields
-// 		for i := range t.NumFields() {
-// 			s.typesVar(pkg, t.Field(i))
-// 		}
-// 	default:
-// 		fmt.Println(t)
-// 	}
-// }
-
-// func (s *Loader) typesVar(pkg *packages.Package, v *types.Var) {
-// 	if !v.Exported() {
-// 		return
-// 	}
-// 	switch t := v.Type().(type) {
-// 	case *types.Named:
-// 		if p, ok := pkg.Imports[v.Pkg().Path()]; ok {
-// 			s.addPackageTypeNames(p, t.Obj().Name())
-// 		}
-// 	}
-// }

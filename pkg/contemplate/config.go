@@ -1,10 +1,10 @@
-package gocontemplate
+package contemplate
 
 type Config struct {
-	Packages []*ConfigPackage `json:"packages" yaml:"packages"`
+	Packages []*PackageConfig `json:"packages" yaml:"packages"`
 }
 
-func (c *Config) Package(path string) *ConfigPackage {
+func (c *Config) Package(path string) *PackageConfig {
 	for _, value := range c.Packages {
 		if value.Path == path {
 			return value

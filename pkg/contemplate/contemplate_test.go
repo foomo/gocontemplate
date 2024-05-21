@@ -1,9 +1,9 @@
-package gocontemplate_test
+package contemplate_test
 
 import (
 	"testing"
 
-	"github.com/foomo/gocontemplate"
+	"github.com/foomo/gocontemplate/pkg/contemplate"
 	_ "github.com/foomo/sesamy-go"              // force inclusion
 	_ "github.com/foomo/sesamy-go/event/params" // force inclusion
 	"github.com/stretchr/testify/assert"
@@ -12,8 +12,8 @@ import (
 
 func TestNewLoader(t *testing.T) {
 	t.Parallel()
-	goctpl, err := gocontemplate.Load(&gocontemplate.Config{
-		Packages: []*gocontemplate.ConfigPackage{
+	goctpl, err := contemplate.Load(&contemplate.Config{
+		Packages: []*contemplate.PackageConfig{
 			{
 				Path:  "github.com/foomo/sesamy-go/event",
 				Types: []string{"PageView"},
@@ -27,8 +27,8 @@ func TestNewLoader(t *testing.T) {
 
 func TestLoader_LookupTypesByType(t *testing.T) {
 	t.Parallel()
-	goctpl, err := gocontemplate.Load(&gocontemplate.Config{
-		Packages: []*gocontemplate.ConfigPackage{
+	goctpl, err := contemplate.Load(&contemplate.Config{
+		Packages: []*contemplate.PackageConfig{
 			{
 				Path:  "github.com/foomo/sesamy-go/event",
 				Types: []string{"PageView"},

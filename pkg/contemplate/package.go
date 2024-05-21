@@ -1,10 +1,10 @@
-package gocontemplate
+package contemplate
 
 import (
 	"go/ast"
 	"go/types"
-	"strings"
 
+	"github.com/foomo/gocontemplate/pkg/assume"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -105,11 +105,11 @@ func (s *Package) LookupScopeExpr(name string) ast.Expr {
 
 func (s *Package) FilterExprsByTypeExpr(expr ast.Expr) []ast.Expr {
 	var ret []ast.Expr
-	if exprIdent := TC[*ast.Ident](expr); exprIdent != nil {
+	if exprIdent := assume.T[*ast.Ident](expr); exprIdent != nil {
 		for _, child := range s.exprs {
-			if childIdent := TC[*ast.Ident](child); childIdent != nil && childIdent.Obj != nil {
-				if childDecl := TC[*ast.ValueSpec](childIdent.Obj.Decl); childDecl != nil {
-					if childDeclType := TC[*ast.Ident](childDecl.Type); childDeclType != nil {
+			if childIdent := assume.T[*ast.Ident](child); childIdent != nil && childIdent.Obj != nil {
+				if childDecl := assume.T[*ast.ValueSpec](childIdent.Obj.Decl); childDecl != nil {
+					if childDeclType := assume.T[*ast.Ident](childDecl.Type); childDeclType != nil {
 						if childDeclType.Obj == exprIdent.Obj {
 							ret = append(ret, child)
 						}
@@ -147,7 +147,8 @@ func (s *Package) addScopeTypeAstExpr(input ast.Expr) {
 	case *ast.Ident:
 		if t.Obj != nil {
 			s.addScopeTypeAstObject(t.Obj.Decl)
-		} else {
+		}
+		if t.IsExported() {
 			s.l.addPackageTypeNames(s.pkg, t.Name)
 		}
 	case *ast.StructType:
@@ -157,33 +158,43 @@ func (s *Package) addScopeTypeAstExpr(input ast.Expr) {
 	case *ast.IndexExpr:
 		s.addScopeTypeAstExpr(t.X)
 		s.addScopeTypeAstExpr(t.Index)
+	case *ast.ArrayType:
+		s.addScopeTypeAstExpr(t.Elt)
 	case *ast.SelectorExpr:
 		s.addScopeTypeAstSelectorExpr(t)
+	default:
+		// fmt.Println(input, t)
 	}
 }
 
 func (s *Package) addScopeTypeAstSelectorExpr(input *ast.SelectorExpr) {
-	if x := TC[*ast.Ident](input.X); x != nil {
-		if xPkgName := TC[*types.PkgName](s.pkg.TypesInfo.Uses[x]); xPkgName != nil {
-			if selIdent := TC[*ast.Ident](input.Sel); selIdent != nil {
-				for node, object := range s.pkg.TypesInfo.Implicits {
-					if object == xPkgName {
-						if nodeImportSepc := TC[*ast.ImportSpec](node); nodeImportSepc != nil {
-							v := strings.Trim(nodeImportSepc.Path.Value, "\"")
-							s.l.addPackageTypeNames(s.pkg.Imports[v], selIdent.Name)
-						}
-					}
-				}
-			}
-		}
+	if inputTypeNamed := assume.T[*types.Named](s.pkg.TypesInfo.TypeOf(input)); inputTypeNamed != nil {
+		s.l.addPackageTypeNames(s.pkg.Imports[inputTypeNamed.Obj().Pkg().Path()], inputTypeNamed.Obj().Name())
 	}
 }
 
 func (s *Package) addScopeTypeAstObject(input any) {
 	switch t := input.(type) {
 	case *ast.TypeSpec:
+		s.addScopeTypeAstFieldList(t.TypeParams)
 		s.addScopeTypeAstExpr(t.Type)
 	}
+}
+
+func (s *Package) addScopeTypeAstFieldList(input *ast.FieldList) {
+	if input != nil {
+		for _, field := range input.List {
+			s.addScopeTypeAstField(field)
+		}
+	}
+}
+
+func (s *Package) addScopeTypeAstField(input *ast.Field) {
+	// switch t := input.(type) {
+	// case *ast.TypeSpec:
+	// 	s.addScopeTypeAstFieldList(t.TypeParams)
+	// 	s.addScopeTypeAstExpr(t.Type)
+	// }
 }
 
 func (s *Package) addExprs(source map[*ast.Ident]types.Object) {
