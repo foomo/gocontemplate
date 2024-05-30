@@ -51,7 +51,7 @@ func (s *Contemplate) LookupTypesByType(obj types.Object) []types.Object {
 				}
 			case *types.TypeName:
 				if objectExpr := pkg.LookupExpr(object.Name()); objectExpr != nil {
-					if objectExprIdent := assume.T[*ast.Ident](objectExpr); objectExprIdent != nil {
+					if objectExprIdent := assume.T[*ast.Ident](objectExpr); objectExprIdent != nil && objectExprIdent.Obj != nil {
 						if objectExprDecl := assume.T[*ast.TypeSpec](objectExprIdent.Obj.Decl); objectExprDecl != nil {
 							if objectExprType, ok := pkg.pkg.TypesInfo.Types[objectExprDecl.Type]; ok {
 								if objectExprTypeNamed := assume.T[*types.Named](objectExprType.Type); objectExprTypeNamed != nil {
