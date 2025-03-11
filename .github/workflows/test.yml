@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
+  merge_group:
   workflow_dispatch:
 
 concurrency:
@@ -18,7 +19,8 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: 'stable'
+          check-latest: true
+          go-version-file: 'go.mod'
 
       - uses: gotesttools/gotestfmt-action@v2
         with:
@@ -29,7 +31,8 @@ jobs:
           version: latest
           args: --timeout=5m
 
-      - run: make test
+      - name: Run tests
+        run: GO_TEST_TAGS=-skip go test -coverprofile=coverage.out -race -json ./... | gotestfmt
 
       - uses: coverallsapp/github-action@v2
         with:

@@ -1,13 +1,25 @@
 .*
 *.log
 *.out
+
+/bin/
 /tmp/
-!.github/
-!.husky/
-!.editorconfig
+
+## Git
 !.gitignore
+
+## GitHub
+!.github/
+
+## Husky
+!.husky/
+!.husky.yaml
+
+## EditorConfig
+!.editorconfig
+
+## Go
 !.golangci.yml
 !.goreleaser.yml
-!.husky.yaml
 go.work
 go.work.sum
