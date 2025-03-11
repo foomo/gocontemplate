@@ -1,10 +1,12 @@
 package contemplate
 
 import (
+	"context"
+
 	"golang.org/x/tools/go/packages"
 )
 
-func Load(cfg *Config) (*Contemplate, error) {
+func Load(ctx context.Context, cfg *Config) (*Contemplate, error) {
 	inst := &Contemplate{
 		cfg:      cfg,
 		Packages: map[string]*Package{},
@@ -12,6 +14,8 @@ func Load(cfg *Config) (*Contemplate, error) {
 
 	// load packages
 	pkgs, err := packages.Load(&packages.Config{
+		Context: ctx,
+		Dir:     cfg.Directory,
 		Mode: packages.NeedName | packages.NeedTypesInfo |
 			packages.NeedFiles | packages.NeedImports | packages.NeedDeps |
 			packages.NeedModule | packages.NeedTypes | packages.NeedSyntax,
