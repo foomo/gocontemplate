@@ -1,6 +1,9 @@
 package contemplate
 
 type Config struct {
+	// Directory containing the go.mod file
+	Directory string `json:"directory" yaml:"directory"`
+	// Packages to load
 	Packages []*PackageConfig `json:"packages" yaml:"packages"`
 }
 

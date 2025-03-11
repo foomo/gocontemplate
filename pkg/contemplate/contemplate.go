@@ -3,10 +3,10 @@ package contemplate
 import (
 	"go/ast"
 	"go/types"
+	"maps"
 	"slices"
 
 	"github.com/foomo/gocontemplate/pkg/assume"
-	"golang.org/x/exp/maps"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -80,7 +80,7 @@ func (s *Contemplate) addPackages(pkgs ...*packages.Package) {
 		if _, ok := s.Packages[pkg.PkgPath]; !ok {
 			s.Packages[pkg.PkgPath] = NewPackage(s, pkg)
 
-			s.addPackages(maps.Values(pkg.Imports)...)
+			s.addPackages(slices.AppendSeq(make([]*packages.Package, 0, len(pkg.Imports)), maps.Values(pkg.Imports))...)
 		}
 	}
 }

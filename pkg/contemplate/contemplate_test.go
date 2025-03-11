@@ -10,7 +10,7 @@ import (
 
 func TestNewLoader(t *testing.T) {
 	t.Parallel()
-	ctpl, err := contemplate.Load(&contemplate.Config{
+	ctpl, err := contemplate.Load(t.Context(), &contemplate.Config{
 		Packages: []*contemplate.PackageConfig{
 			{
 				Path:  "github.com/foomo/gocontemplate/test/event",
@@ -25,7 +25,7 @@ func TestNewLoader(t *testing.T) {
 
 func TestLoader_LookupTypesByType(t *testing.T) {
 	t.Parallel()
-	ctpl, err := contemplate.Load(&contemplate.Config{
+	ctpl, err := contemplate.Load(t.Context(), &contemplate.Config{
 		Packages: []*contemplate.PackageConfig{
 			{
 				Path:  "github.com/foomo/gocontemplate/test/event",
