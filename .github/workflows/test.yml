@@ -26,13 +26,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: golangci/golangci-lint-action@v6
+      - uses: golangci/golangci-lint-action@v8
         with:
           version: latest
           args: --timeout=5m
 
       - name: Run tests
-        run: GO_TEST_TAGS=-skip go test -coverprofile=coverage.out -race -json ./... | gotestfmt
+        run: make test
 
       - uses: coverallsapp/github-action@v2
         with:
