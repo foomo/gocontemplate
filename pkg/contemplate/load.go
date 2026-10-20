@@ -7,6 +7,9 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// Load loads the packages listed in cfg, together with all their transitive
+// imports, and scopes the configured types and the types they reference.
+// It returns an error if the packages cannot be loaded.
 func Load(ctx context.Context, cfg *Config) (*Contemplate, error) {
 	inst := &Contemplate{
 		cfg:      cfg,

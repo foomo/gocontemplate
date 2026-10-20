@@ -10,8 +10,12 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// Contemplate is the result of [Load]. Create it with [Load]; the zero value
+// is not usable. It is not safe for concurrent modification.
 type Contemplate struct {
-	cfg      *Config
+	cfg *Config
+	// Packages maps import paths to all loaded packages, including
+	// transitive imports.
 	Packages map[string]*Package
 }
 
@@ -19,10 +23,16 @@ type Contemplate struct {
 // ~ Public methods
 // ------------------------------------------------------------------------------------------------
 
+// Package returns the loaded package with the given import path, or nil if
+// it was not loaded.
 func (s *Contemplate) Package(path string) *Package {
 	return s.Packages[path]
 }
 
+// LookupExpr returns the defining identifier of the package-level constant,
+// function or type called name, searching all loaded packages. If several
+// packages define name, which one is returned is unspecified. It returns nil
+// if no package defines name.
 func (s *Contemplate) LookupExpr(name string) ast.Expr {
 	for _, pkg := range s.Packages {
 		if value := pkg.LookupExpr(name); value != nil {
@@ -33,6 +43,11 @@ func (s *Contemplate) LookupExpr(name string) ast.Expr {
 	return nil
 }
 
+// LookupTypesByType returns the package-level objects of all loaded packages
+// that derive from the named type obj: constants of type obj and types
+// declared in terms of obj, such as `type X obj` or `type X obj[T]`.
+// It returns nil if obj's name does not resolve to an identifier via
+// [Contemplate.LookupExpr].
 func (s *Contemplate) LookupTypesByType(obj types.Object) []types.Object {
 	var ret []types.Object
 
@@ -73,6 +88,8 @@ func (s *Contemplate) LookupTypesByType(obj types.Object) []types.Object {
 	return ret
 }
 
+// LookupAstIdentDefsByDeclType returns the package-level objects of the
+// imported packages whose type is identical to input.Type.
 func (s *Contemplate) LookupAstIdentDefsByDeclType(input types.TypeAndValue) []types.Object {
 	var (
 		pkgs       []*packages.Package
