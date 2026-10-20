@@ -74,8 +74,7 @@ linters:
     # https://golangci-lint.run/docs/linters/configuration/#gocritic
     gocritic:
       disabled-checks:
-        - assignOp
-        - ifElseChain
+        - singleCaseSwitch
         - deprecatedComment
     # https://golangci-lint.run/docs/linters/configuration/#gomoddirectives
     gomoddirectives:

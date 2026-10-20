@@ -13,6 +13,7 @@ func (c *Config) Package(path string) *PackageConfig {
 			return value
 		}
 	}
+
 	return nil
 }
 
@@ -21,5 +22,6 @@ func (c *Config) PackagePaths() []string {
 	for i, value := range c.Packages {
 		ret[i] = value.Path
 	}
+
 	return ret
 }

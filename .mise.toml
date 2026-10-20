@@ -7,9 +7,9 @@ minimum_release_age = "3d"
 # https://mise-tools.jdx.dev/tools/actionlint
 actionlint = "1.7.12"
 # https://mise-tools.jdx.dev/tools/golangci-lint
-golangci-lint = "2.14.0"
+golangci-lint = "2.15.0"
 # https://mise-tools.jdx.dev/tools/lefthook
-lefthook = "2.2.1"
+lefthook = "2.2.2"
 # https://mise-tools.jdx.dev/tools/goreleaser
 goreleaser = "2.18.3"
 # https://mise-tools.jdx.dev/tools/osv-scanner

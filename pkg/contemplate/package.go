@@ -23,6 +23,7 @@ type Package struct {
 
 func NewPackage(l *Contemplate, pkg *packages.Package) *Package {
 	exprs := make(map[string]ast.Expr)
+
 	for expr, value := range pkg.TypesInfo.Defs {
 		if value != nil {
 			switch value.(type) {
@@ -89,6 +90,7 @@ func (s *Package) AddScopeTypes(names ...string) {
 	for _, name := range names {
 		if _, ok := s.scopeTypes[name]; !ok {
 			scopeType := s.LookupType(name)
+
 			scopeExpr := s.LookupExpr(name)
 			if scopeType != nil && scopeExpr != nil {
 				s.scopeTypes[name] = scopeType
@@ -109,6 +111,7 @@ func (s *Package) LookupScopeExpr(name string) ast.Expr {
 
 func (s *Package) FilterExprsByTypeExpr(expr ast.Expr) []ast.Expr {
 	var ret []ast.Expr
+
 	if exprIdent := assume.T[*ast.Ident](expr); exprIdent != nil {
 		for _, child := range s.exprs {
 			if childIdent := assume.T[*ast.Ident](child); childIdent != nil && childIdent.Obj != nil {
@@ -122,6 +125,7 @@ func (s *Package) FilterExprsByTypeExpr(expr ast.Expr) []ast.Expr {
 			}
 		}
 	}
+
 	return ret
 }
 
@@ -139,6 +143,7 @@ func (s *Package) LookupAstIdentDef(typeName string) *ast.Ident {
 			return defAstIdent
 		}
 	}
+
 	return nil
 }
 
@@ -152,6 +157,7 @@ func (s *Package) addScopeTypeAstExpr(input ast.Expr) {
 		if t.Obj != nil {
 			s.addScopeTypeAstObject(t.Obj.Decl)
 		}
+
 		if t.IsExported() {
 			s.l.addPackageTypeNames(s.pkg, t.Name)
 		}

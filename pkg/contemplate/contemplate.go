@@ -29,6 +29,7 @@ func (s *Contemplate) LookupExpr(name string) ast.Expr {
 			return value
 		}
 	}
+
 	return nil
 }
 
@@ -68,6 +69,36 @@ func (s *Contemplate) LookupTypesByType(obj types.Object) []types.Object {
 			}
 		}
 	}
+
+	return ret
+}
+
+func (s *Contemplate) LookupAstIdentDefsByDeclType(input types.TypeAndValue) []types.Object {
+	var (
+		pkgs       []*packages.Package
+		addImports func(pkg *packages.Package)
+	)
+
+	addImports = func(pkg *packages.Package) {
+		for _, p := range pkg.Imports {
+			if !slices.Contains(pkgs, p) {
+				pkgs = append(pkgs, p)
+				addImports(p)
+			}
+		}
+	}
+
+	var ret []types.Object
+
+	for _, p := range pkgs {
+		for _, name := range p.Types.Scope().Names() {
+			child := p.Types.Scope().Lookup(name)
+			if child.Type() == input.Type {
+				ret = append(ret, child)
+			}
+		}
+	}
+
 	return ret
 }
 
@@ -89,30 +120,6 @@ func (s *Contemplate) addPackagesConfigs(confs ...*PackageConfig) {
 	for _, conf := range confs {
 		s.Package(conf.Path).AddScopeTypes(conf.Types...)
 	}
-}
-
-func (s *Contemplate) LookupAstIdentDefsByDeclType(input types.TypeAndValue) []types.Object {
-	var pkgs []*packages.Package
-	var addImports func(pkg *packages.Package)
-	addImports = func(pkg *packages.Package) {
-		for _, p := range pkg.Imports {
-			if !slices.Contains(pkgs, p) {
-				pkgs = append(pkgs, p)
-				addImports(p)
-			}
-		}
-	}
-
-	var ret []types.Object
-	for _, p := range pkgs {
-		for _, name := range p.Types.Scope().Names() {
-			child := p.Types.Scope().Lookup(name)
-			if child.Type() == input.Type {
-				ret = append(ret, child)
-			}
-		}
-	}
-	return ret
 }
 
 func (s *Contemplate) addPackageTypeNames(pkg *packages.Package, typeNames ...string) {
