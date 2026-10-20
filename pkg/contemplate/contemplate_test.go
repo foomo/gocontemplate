@@ -43,3 +43,17 @@ func TestLoader_LookupTypesByType(t *testing.T) {
 	pkgTypes := ctpl.LookupTypesByType(pkgType)
 	assert.NotEmpty(t, pkgTypes)
 }
+
+func TestLoader_LookupTypesByInterface(t *testing.T) {
+	t.Parallel()
+	ctpl, err := contemplate.Load(t.Context(), &contemplate.Config{
+		Packages: []*contemplate.PackageConfig{
+			{
+				Path:  "github.com/foomo/gocontemplate/test/service",
+				Types: []string{"Event"},
+			},
+		},
+	})
+	require.NoError(t, err)
+	assert.Len(t, ctpl.Packages, 4)
+}

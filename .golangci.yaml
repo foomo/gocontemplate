@@ -1,0 +1,122 @@
+# yaml-language-server: $schema=https://golangci-lint.run/jsonschema/golangci.jsonschema.json
+version: "2"
+
+run:
+  build-tags: [ safe ]
+  modules-download-mode: readonly
+
+linters:
+  default: all
+  disable:
+    # Project specific linters
+    # Discouraged linters
+    - cyclop # cyclomatic complexity; gocognit/gocyclo cover this when wanted
+    - depguard # requires a curated allowlist to be useful; opt in per project
+    - dogsled # blank-identifier count is a style preference
+    - dupl # clone detection is noisy on table-driven tests
+    - dupword # high false-positive rate in prose comments
+    - embeddedstructfieldcheck # embedded-field placement is a style preference
+    - err113 # forbids dynamic errors; conflicts with fmt.Errorf wrapping
+    - exhaustruct_v5 # requires every struct field set; impractical outside config
+    - funlen # length caps fight table-driven tests
+    - ginkgolinter # Ginkgo not used
+    - gochecknoglobals # package-level vars are legitimate for sentinels
+    - gochecknoinits # init is legitimate for registration patterns
+    - gocognit # complexity caps land arbitrarily; review catches this
+    - gocyclo # as above
+    - godot # comment punctuation is not worth a build failure
+    - godox # TODOs/FIXMEs are tracked in the issue tracker, not the linter
+    - interfacebloat # interface size is a design call
+    - intrange # range-over-int is a rewrite, not a defect
+    - ireturn # returning interfaces is sometimes the right design
+    - lll # line length belongs to the formatter
+    - maintidx # composite metric; same objection as cyclop
+    - mnd # magic-number detection fires on ports, sizes, exit codes
+    - nestif # nesting depth is a review concern
+    - nlreturn # blank-line-before-return is covered by wsl_v5
+    - noinlineerr # forbids `if err := ...; err != nil`, the idiomatic form
+    - perfsprint # micro-optimisation; apply where profiling says so
+    - prealloc # speculative preallocation hurts readability
+    - protogetter # protobuf not used
+    - sloglint # opt in per project once a logging convention is fixed
+    - tagalign # struct-tag alignment is formatter territory
+    - tagliatelle # tag naming varies per wire format
+    - unparam # fires on interface implementations and callbacks
+    - varnamelen # name length by scope is a style preference
+    - wrapcheck # noisy; wrap deliberately at package boundaries instead
+    - zerologlint # zerolog not used
+    # Deprecated linters — successors stay enabled
+    - exhaustruct # replaced by exhaustruct_v5 (deprecated v2.6.0)
+    - gomodguard # replaced by gomodguard_v2 (deprecated v2.12.0)
+    - wsl # replaced by wsl_v5 (deprecated v2.2.0)
+
+  # https://golangci-lint.run/docs/linters/
+  settings:
+    # https://golangci-lint.run/docs/linters/configuration/#forbidigo
+    forbidigo:
+      forbid:
+        # default
+        - pattern: ^(fmt\.Print(|f|ln)|print|println)$
+        - pattern: ^errors\.Cause$
+          pkg: ^github.com/pkg/errors$
+          msg: "Use github.com/foomo/go/errors.Cause() or standard library errors.As() or errors.Unwrap() instead."
+      analyze-types: true
+    # https://golangci-lint.run/docs/linters/configuration/#goconst
+    goconst:
+      ignore-tests: true
+      min-occurrences: 5
+    # https://golangci-lint.run/docs/linters/configuration/#paralleltest
+    paralleltest:
+      ignore-missing-subtests: true
+    # https://golangci-lint.run/docs/linters/configuration/#exhaustive
+    exhaustive:
+      default-signifies-exhaustive: true
+    # https://golangci-lint.run/docs/linters/configuration/#gocritic
+    gocritic:
+      disabled-checks:
+        - singleCaseSwitch
+        - deprecatedComment
+    # https://golangci-lint.run/docs/linters/configuration/#gomoddirectives
+    gomoddirectives:
+      replace-local: true
+    # https://golangci-lint.run/docs/linters/configuration/#gosec
+    gosec:
+      severity: medium
+      confidence: medium
+    # https://golangci-lint.run/docs/linters/configuration/#revive
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+        - name: package-comments
+          disabled: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: _test\.go
+        linters:
+          - forbidigo
+          - unused
+          - gosec
+    paths:
+      - (^|/)\..*
+      - (^|/)bin($|/)
+      - (^|/)dist($|/)
+      - (^|/)tmp($|/)
+      - (^|/)docs($|/)
+      - (^|/)devops($|/)
+      - (^|/)vendor($|/)
+      - (^|/)examples($|/)
+      - (^|/)third_party($|/)
+      - (^|/)node_modules($|/)
+
+# https://golangci-lint.run/docs/formatters/
+formatters:
+  enable:
+    - gofmt
+    - goimports
