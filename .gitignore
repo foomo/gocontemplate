@@ -1,25 +1,40 @@
 .*
 *.log
+*.pid
+*.retry
 *.out
-
-/bin/
-/tmp/
+*.tgz
+*.zip
+*.pem
+bin/
+tmp/
 
 ## Git
+!.gitkeep
 !.gitignore
+!.gitattributes
 
 ## GitHub
 !.github/
 
-## Husky
-!.husky/
-!.husky.yaml
+## Mise
+!.mise.toml
+
+## Lefthook
+!.lefthook.yaml
 
 ## EditorConfig
 !.editorconfig
 
-## Go
-!.golangci.yml
-!.goreleaser.yml
+## Golang
 go.work
 go.work.sum
+!.golangci.yaml
+!.goreleaser.yaml
+
+## Vitepress
+node_modules/
+!docs/.vitepress
+
+## OSV Scanner
+!.osv-scanner.toml

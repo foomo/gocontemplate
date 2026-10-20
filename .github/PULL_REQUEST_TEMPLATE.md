@@ -1,19 +1,36 @@
-### Type of Change
-- [ ] New feature
-- [ ] Bug fix
-- [ ] Documentation update
-- [ ] Refactoring
-- [ ] Hotfix
-- [ ] Security patch
-
 ### Description
-_[Provide a detailed explanation of the changes you have made. Include the reasons behind these changes and any relevant context. Link any related issues.]_
+
+<!-- Required: One-line summary of what the PR is about -->
+
+### Type of Change
+
+<!-- Required: Check the relevant option, keep unselected ones -->
+
+- [ ] 🐛 Bug fix
+- [ ] ✨ New feature
+- [ ] 💥 Breaking change
+- [ ] 📝 Documentation
+- [ ] ♻️ Refactoring
+- [ ] 🏃‍➡️ Performance
+- [ ] ✅ Tests
+- [ ] 🔐 Security
+- [ ] 🔧 Build/CI
 
 ### Related Issues
-_[If this pull request addresses an issue, please link to it here (e.g., Fixes #123).]_
+
+<!-- Optional: List of links to related issues (Fixes #123, Closes #456), remove if empty -->
+
+### Changes
+
+<!-- Optional: List of one-line key changes, remove if empty -->
 
 ### Checklist
+
 - [ ] My code adheres to the coding and style guidelines of the project.
 - [ ] I have performed a self-review of my own code.
-- [ ] I have commented my code, particularly in hard-to-understand areas.
+- [ ] I have commented on my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.
+
+#### Notes
+
+<!-- Optional: Add additional context, remove if empty -->

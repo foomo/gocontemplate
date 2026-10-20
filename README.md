@@ -1,9 +1,10 @@
-[![Build Status](https://github.com/foomo/gocontemplate/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/foomo/gocontemplate/actions/workflows/test.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/foomo/gocontemplate)](https://goreportcard.com/report/github.com/foomo/gocontemplate)
+[![CodeQL](https://github.com/foomo/gocontemplate/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/foomo/gocontemplate/actions/workflows/github-code-scanning/codeql)
+[![Coverage](https://img.shields.io/codecov/c/github/foomo/gocontemplate?style=flat-square&logo=github)](https://app.codecov.io/gh/foomo/gocontemplate)
 [![GoDoc](https://godoc.org/github.com/foomo/gocontemplate?status.svg)](https://godoc.org/github.com/foomo/gocontemplate)
+[![GitHub Stars](https://img.shields.io/github/stars/foomo/gocontemplate.svg?style=flat-square&logo=github)](https://github.com/foomo/gocontemplate)
 
 <p align="center">
-  <img alt="sesamy" src=".github/assets/gocontemplate.png"/>
+  <img alt="gocontemplate" src="docs/public/logo.png" width="400" height="400"/>
 </p>
 
 # Go Contemplate
@@ -38,10 +39,12 @@ func main() {
 
 ## How to Contribute
 
-Please refer to the [CONTRIBUTING](.github/CONTRIBUTING.md) details and follow the [CODE_OF_CONDUCT](.github/CODE_OF_CONDUCT.md) and [SECURITY](.github/SECURITY.md) guidelines.
+Contributions are welcome! Please read the [contributing guide](docs/CONTRIBUTING.md).
+
+![Contributors](https://contributors-table.vercel.app/image?repo=foomo/gocontemplate&width=50&columns=15)
 
 ## License
 
-Distributed under MIT License, please see license file within the code for more details.
+Distributed under MIT License, please read the [license file](LICENSE) for more details.
 
 _Made with ♥ [foomo](https://www.foomo.org) by [bestbytes](https://www.bestbytes.com)_

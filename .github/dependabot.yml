@@ -1,33 +1,47 @@
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
 version: 2
 
 updates:
-  - package-ecosystem: 'github-actions'
-    open-pull-requests-limit: 1
+  - package-ecosystem: github-actions
+    commit-message: { prefix: 'chore(deps)' }
     directory: '/'
     schedule:
-      day: 'sunday'
-      interval: 'weekly'
+      day: sunday
+      interval: weekly
+      timezone: Europe/Berlin
     groups:
-      github-actions:
-        patterns: ['*']
-
-  - package-ecosystem: 'gomod'
-    open-pull-requests-limit: 1
-    directory: '/'
-    schedule:
-      day: 'sunday'
-      interval: 'weekly'
-    groups:
-      gomod-security:
-        applies-to: security-updates
-        update-types: ['minor', 'patch']
-        patterns: ['*']
-      gomod-update:
+      deps:
         applies-to: version-updates
-        update-types: ['minor', 'patch']
-        patterns: ['*']
+        patterns: [ '*' ]
+      security:
+        applies-to: security-updates
+        patterns: [ '*' ]
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: gomod
+    commit-message: { prefix: 'chore(deps)' }
+    directories: [ '**/*' ]
+    schedule:
+      day: sunday
+      interval: weekly
+      timezone: Europe/Berlin
     ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: '*'
+        update-types: [ 'version-update:semver-major' ]
+    groups:
+      deps:
+        applies-to: version-updates
+        patterns: [ '*' ]
+        exclude-patterns: [ 'github.com/foomo/*' ]
+      foomo:
+        applies-to: version-updates
+        patterns: [ 'github.com/foomo/*' ]
+      security:
+        applies-to: security-updates
+        patterns: [ '*' ]
+    cooldown:
+      default-days: 7
+      semver-minor-days: 7
+      semver-patch-days: 3
+      exclude: [ 'github.com/foomo/*' ]
